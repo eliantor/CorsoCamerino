@@ -24,7 +24,7 @@ public class StringsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mBoundedData==null?0:mBoundedData.size();
+       return mBoundedData == null ? 0 : mBoundedData.size();
     }
 
     @Override
@@ -52,7 +52,6 @@ public class StringsAdapter extends BaseAdapter {
         if(recycledView == null){
             recycledView = mInfalter.inflate(R.layout.row_layout,parent,false);
             h=new Holder();
-            Log.d("ADAPTER","Creating new view");
             h.tv = (TextView)recycledView.findViewById(R.id.tv_row);
             recycledView.setTag(h);
         } else {
