@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
-import com.baasbox.android.BaasUser;
+import com.baasbox.android.*;
+import com.baasbox.android.Filter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
@@ -58,6 +60,36 @@ public class MainActivity extends Activity {
         mListView.setOnItemClickListener(listener);
     }
 
+    private void startRefresh(){
+        BaasDocument.fetchAll("collection",afterDate(""),refreshCallback);
+    }
+
+    private void  refreshList(List<BaasDocument> comments){
+        mContent.clear();
+        for (BaasDocument doc: comments){
+            mContent.add(doc.getString("text"));
+            String creationDate = doc.getCreationDate();
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private Filter afterDate(String lastKnownDate){
+        return BaasQuery.builder().where("_creation_date > "+lastKnownDate)
+
+                .filter();
+    }
+
+    private final BaasHandler<List<BaasDocument>> refreshCallback =
+            new BaasHandler<List<BaasDocument>>() {
+                @Override
+                public void handle(BaasResult<List<BaasDocument>> result) {
+                    if (result.isSuccess()){
+                        refreshList(result.value());
+                    } else {
+
+                    }
+                }
+            };
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
